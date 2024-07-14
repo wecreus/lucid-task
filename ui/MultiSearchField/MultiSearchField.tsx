@@ -12,7 +12,6 @@ const customStyles = {
     color: state.isSelected ? "#2c2c2c" : "#ffffff",
     backgroundColor: state.isSelected ? "#d8d8d8" : "#2c2c2c",
   }),
-
   control: (defaultStyles: CSSObjectWithLabel) => ({
     ...defaultStyles,
     color: "#ffffff",
@@ -37,6 +36,7 @@ const customStyles = {
 
 export default function MultiSearchField() {
   const [search, setSearch] = useState("");
+  const [total, setTotal] = useState(0);
 
   const debouncedSearch = useDebounce(search, 400);
 
@@ -55,7 +55,15 @@ export default function MultiSearchField() {
       <Select
         instanceId={"search-term"}
         inputId="search-term"
-        onChange={(newValue) => console.log(newValue)}
+        onChange={(newValue) =>
+          setTotal(
+            newValue.reduce(
+              (accumulator, currentValue) =>
+                accumulator + Number(currentValue.value),
+              0
+            )
+          )
+        }
         placeholder="Enter formula"
         isMulti
         getOptionLabel={(option: MockData) => option.name}
