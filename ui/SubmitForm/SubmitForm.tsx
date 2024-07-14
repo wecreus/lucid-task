@@ -5,11 +5,13 @@ import { submitForm } from "@/lib/actions";
 import styles from "./form.module.css";
 import MultiSearchField from "@/ui/MultiSearchField/MultiSearchField";
 import { useEffect } from "react";
+import useFormulaStore from "@/lib/store"; 
 
 const initialState: FormState = { message: "", errors: {} };
 
 export default function SubmitForm() {
   const [state, formAction] = useFormState(submitForm, initialState);
+  const { total } = useFormulaStore();
 
   // useEffect(() => {
   //   if(state.message === "success") {
@@ -18,6 +20,7 @@ export default function SubmitForm() {
   // }, [state]);
   return (
     <div className={styles.container}>
+      Total: {total}
       <form action={formAction} className={styles.form}>
         <MultiSearchField />
         <div className={styles.controls}>

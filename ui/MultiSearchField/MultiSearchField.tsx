@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import getMockData from "@/api/getMockData";
 import useDebounce from "@/lib/hooks/useDebounce";
 import type { MockData } from "@/lib/definitions";
 import styles from "./search.module.css";
 import Select, { type CSSObjectWithLabel } from "react-select";
+import { useFormState } from "react-dom";
+import useFormulaStore from "@/lib/store";
 
 const customStyles = {
   option: (defaultStyles: CSSObjectWithLabel, state: any) => ({
@@ -37,6 +39,7 @@ const customStyles = {
 export default function MultiSearchField() {
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState(0);
+  const { set } = useFormulaStore();
 
   const debouncedSearch = useDebounce(search, 400);
 
@@ -49,6 +52,10 @@ export default function MultiSearchField() {
     enabled: search.length > 2,
     staleTime: 1000,
   });
+
+  useEffect(() => {
+    set(total);
+  }, [total, set]);
 
   return (
     <div className={styles.row}>
