@@ -5,7 +5,6 @@ import useDebounce from "@/lib/hooks/useDebounce";
 import type { MockData } from "@/lib/definitions";
 import styles from "./search.module.css";
 import Select, { type CSSObjectWithLabel } from "react-select";
-import { useFormState } from "react-dom";
 import useFormulaStore from "@/lib/store";
 
 const customStyles = {
@@ -71,7 +70,7 @@ export default function MultiSearchField() {
             )
           )
         }
-        placeholder="Enter formula"
+        placeholder="Search by name"
         isMulti
         getOptionLabel={(option: MockData) => option.name}
         options={data}
