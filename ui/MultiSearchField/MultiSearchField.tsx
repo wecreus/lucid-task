@@ -8,9 +8,7 @@ export default function MultiSearchField() {
 
   const { data, isLoading, isError } = useQuery({
     queryFn: async () =>
-      await fetch(
-        `https://652f91320b8d8ddac0b2b62b.mockapi.io/autocomplete?name=${search}`
-      ).then((response) => response.json()),
+      await getMockData(search),
     queryKey: ["autocomplete", search],
     enabled: search.length > 2,
     staleTime: 1000
