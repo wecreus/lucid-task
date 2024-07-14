@@ -1,30 +1,49 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import getMockData from "@/api/getMockData";
 import useDebounce from "@/lib/hooks/useDebounce";
 import type { MockData } from "@/lib/definitions";
-import { useState } from "react";
 import styles from "./search.module.css";
+import Select, { type CSSObjectWithLabel } from "react-select";
 
-function MultiOptions({ options }: { options: MockData[] }) {
-  if(options.length === 0) return (
-    <div>No results</div>
-  );
-  
-  return (
-    <div>
-      {options.map((option, index) => (
-        <div key={`${option.id}-${index}`}>{option.name}</div>
-      ))}
-    </div>
-  );
-}
+const customStyles = {
+  option: (defaultStyles: CSSObjectWithLabel, state: any) => ({
+    ...defaultStyles,
+    color: state.isSelected ? "#2c2c2c" : "#ffffff",
+    backgroundColor: state.isSelected ? "#d8d8d8" : "#2c2c2c",
+  }),
+
+  control: (defaultStyles: CSSObjectWithLabel) => ({
+    ...defaultStyles,
+    color: "#ffffff",
+    backgroundColor: "#2c2c2c",
+    padding: "10px",
+    border: "none",
+    boxShadow: "none",
+  }),
+  singleValue: (defaultStyles: CSSObjectWithLabel) => ({
+    ...defaultStyles,
+    color: "#ffffff",
+  }),
+  valueContainer: (defaultStyles: CSSObjectWithLabel) => ({
+    ...defaultStyles,
+    color: "#ffffff",
+  }),
+  input: (defaultStyles: CSSObjectWithLabel) => ({
+    ...defaultStyles,
+    color: "#ffffff",
+  }),
+};
 
 export default function MultiSearchField() {
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useDebounce(search, 400);
 
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data,
+    isLoading,
+  }: { data: MockData[] | undefined; isLoading: boolean } = useQuery({
     queryFn: async () => await getMockData(debouncedSearch),
     queryKey: ["autocomplete", debouncedSearch],
     enabled: search.length > 2,
@@ -33,13 +52,18 @@ export default function MultiSearchField() {
 
   return (
     <div className={styles.row}>
-      <label htmlFor="search-term" className={styles.label}>
-        Search for a term:
-      </label>
-      <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
-      {data && (
-        <MultiOptions options={data} />
-      )}
+      <Select
+        instanceId={"search-term"}
+        inputId="search-term"
+        onChange={(newValue) => console.log(newValue)}
+        placeholder="Enter formula"
+        isMulti
+        getOptionLabel={(option: MockData) => option.name}
+        options={data}
+        isLoading={isLoading}
+        onInputChange={(newValue) => setSearch(String(newValue))}
+        styles={customStyles}
+      />
     </div>
   );
 }
