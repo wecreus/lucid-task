@@ -13,16 +13,17 @@ export default function SubmitForm() {
   const [state, formAction] = useFormState(submitForm, initialState);
   const { total } = useFormulaStore();
 
-  // useEffect(() => {
-  //   if(state.message === "success") {
-  //     alert("server received: " + String(state.data));
-  //   }
-  // }, [state]);
+  useEffect(() => {
+    if(state.message === "success") {
+      alert("server received: " + state.data);
+    }
+  }, [state]);
   return (
     <div className={styles.container}>
       Total: {total}
       <form action={formAction} className={styles.form}>
         <MultiSearchField />
+        <input type="hidden" name="total" value={total} />
         <div className={styles.controls}>
           <button type="submit" className={styles.button}>
             Submit

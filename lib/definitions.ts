@@ -5,7 +5,7 @@ export type FormState = {
   errors: {
     message?: string;
   };
-  data?: MockData | string[];
+  data?: string;
 }
 
 export type MockData = {
